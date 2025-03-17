@@ -26,41 +26,53 @@ function ApiCrud() {
     formData.append("password", values.password);
     formData.append("profile", selectedFile);
 
-    if (id !== null) {
-      // Data Updating !!
-      axios
-        .patch(`https://generateapi.onrender.com/api/ApiCrud/${id}`, formData, {
-          headers: {
-            Authorization: Token,
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then((res) => {
-          console.log("Data Updated");
-          dataView();
-          setId(null);
-          setIni({
-            username: "",
-            email: "",
-            password: "",
-            profile: "",
+    if (
+      values.username !== "" &&
+      values.email !== "" &&
+      values.password !== "" &&
+      values.profile !== null
+    ) {
+      if (id !== null) {
+        // Data Updating !!
+        axios
+          .patch(
+            `https://generateapi.onrender.com/api/ApiCrud/${id}`,
+            formData,
+            {
+              headers: {
+                Authorization: Token,
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          )
+          .then((res) => {
+            console.log("Data Updated");
+            dataView();
+            setId(null);
+            setIni({
+              username: "",
+              email: "",
+              password: "",
+              profile: "",
+            });
           });
-        });
+      } else {
+        // Data Creating !!
+        axios
+          .post(" https://generateapi.onrender.com/api/ApiCrud", formData, {
+            headers: {
+              Authorization: Token,
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then((res) => {
+            console.log("Data Created !!");
+            dataView();
+          });
+      }
     } else {
-      // Data Creating !!
-      axios
-        .post(" https://generateapi.onrender.com/api/ApiCrud", formData, {
-          headers: {
-            Authorization: Token,
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then((res) => {
-          console.log("Data Created !!");
-          dataView();
-        });
+      console.log("Input Field Empty !!");
     }
-    console.log(values);
     resetForm();
   };
 
@@ -91,7 +103,9 @@ function ApiCrud() {
       username: el.username,
       email: el.email,
       password: el.password,
+      profile: el.profile,
     });
+
     setId(el._id);
   };
 
